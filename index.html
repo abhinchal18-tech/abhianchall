@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>💖 Proposal Journey 💖</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    }
+
+    html, body {
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      background: linear-gradient(145deg, #ffb6c1 0%, #d87093 35%, #ba2d7a 70%, #6a1b4d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.8rem;
+    }
+
+    .bg-hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .bg-heart {
+      position: absolute;
+      bottom: -20px;
+      color: rgba(255, 255, 255, 0.15);
+      font-size: clamp(1rem, 3.5vw, 1.8rem);
+      animation: floatUp 14s linear infinite;
+      user-select: none;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg) scale(0.7); opacity: 0.2; }
+      100% { transform: translateY(-110vh) rotate(720deg) scale(1.3); opacity: 0.7; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 10;
+      max-width: 480px;
+      width: 100%;
+      padding: clamp(1.2rem, 4.5vw, 2.2rem) clamp(0.9rem, 3.5vw, 1.8rem);
+      background: rgba(255, 240, 245, 0.13);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-radius: 48px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      transform: scale(1);
+      opacity: 1;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      word-wrap: break-word;
+    }
+    .card.hidden {
+      opacity: 0;
+      transform: scale(0.7) rotate(5deg);
+      pointer-events: none;
+      display: none;
+    }
+
+    .heading {
+      font-size: clamp(1.4rem, 5.5vw, 2.2rem);
+      font-weight: 700;
+      color: #fff8f0;
+      text-shadow: 0 4px 20px rgba(180, 20, 80, 0.5);
+      line-height: 1.3;
+      word-wrap: break-word;
+      max-width: 100%;
+      padding: 0 0.2rem;
+      min-height: 2.2rem;
+    }
+    .sub-heading {
+      font-size: clamp(0.95rem, 2.8vw, 1.3rem);
+      color: #ffe0d0;
+      opacity: 0.9;
+      margin-top: 0.3rem;
+      word-wrap: break-word;
+      max-width: 100%;
+      min-height: 1.8rem;
+    }
+    .btn-primary {
+      border: none;
+      padding: 0.7rem clamp(1.5rem, 5vw, 2.8rem);
+      border-radius: 80px;
+      font-size: clamp(0.95rem, 2.8vw, 1.3rem);
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(145deg, #ff4d7a, #c2185b);
+      color: white;
+      box-shadow: 0 8px 30px rgba(200, 30, 80, 0.5);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s, opacity 0.6s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      letter-spacing: 0.5px;
+      margin-top: 0.6rem;
+      touch-action: manipulation;
+      width: auto;
+      min-width: 120px;
+      max-width: 90%;
+      word-wrap: break-word;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .btn-primary.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .btn-primary:hover { transform: scale(1.04); }
+    .btn-primary:active { transform: scale(0.95); }
+
+    .loading-bar {
+      width: 80%;
+      max-width: 260px;
+      height: 8px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      margin: 0.8rem auto;
+      overflow: hidden;
+    }
+    .loading-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff4d7a, #ffb0c0);
+      border-radius: 10px;
+      transition: width 0.4s ease;
+    }
+    .loading-text {
+      font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+      color: #ffe0d0;
+      margin-top: 0.3rem;
+      min-height: 1.6rem;
+    }
+    .match-glow {
+      animation: glowPulse 1s infinite alternate;
+    }
+    @keyframes glowPulse {
+      0% { text-shadow: 0 0 20px #ff4d7a, 0 0 40px #ff2a6d; }
+      100% { text-shadow: 0 0 40px #ff6b9d, 0 0 80px #ff4d7a, 0 0 120px #c2185b; }
+    }
+
+    .step-text {
+      font-size: clamp(1.3rem, 4.8vw, 2rem);
+      font-weight: 600;
+      color: #fff5ee;
+      text-shadow: 0 2px 20px rgba(200,40,80,0.4);
+      word-wrap: break-word;
+      max-width: 100%;
+      padding: 0 0.2rem;
+      line-height: 1.4;
+      min-height: 2.5rem;
+    }
+
+    .hearts-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 0.8rem 0;
+      max-width: 300px;
+      position: relative;
+    }
+    .heart-item {
+      font-size: clamp(2.2rem, 8vw, 3.2rem);
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+      user-select: none;
+      padding: 0.2rem;
+      opacity: 1;
+      transform: scale(1);
+      position: relative;
+      z-index: 5;
+    }
+    .heart-item:hover { transform: scale(1.15); }
+    .heart-item.pop {
+      animation: popHeart 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes popHeart {
+      0% { transform: scale(1); opacity: 1; }
+      30% { transform: scale(1.6); opacity: 1; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+    .heart-item.final-heart {
+      animation: finalPop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      z-index: 20;
+    }
+    @keyframes finalPop {
+      0% { transform: scale(1); opacity: 1; }
+      20% { transform: scale(2.5); opacity: 1; filter: drop-shadow(0 0 40px #ff4d7a) drop-shadow(0 0 80px #ff2a6d); }
+      50% { transform: scale(3.5); opacity: 1; filter: drop-shadow(0 0 60px #ff6b9d) drop-shadow(0 0 120px #ff4d7a); }
+      80% { transform: scale(4); opacity: 0.8; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .heart-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 100;
+      font-size: clamp(1rem, 3vw, 1.8rem);
+      animation: particleFly 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes particleFly {
+      0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(720deg); opacity: 0; }
+    }
+
+    .explosion-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 150;
+      font-size: clamp(1.5rem, 4vw, 2.8rem);
+      animation: explosionFly 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes explosionFly {
+      0% { transform: translate(0, 0) scale(0.3) rotate(0deg); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.8) rotate(1080deg); opacity: 0; }
+    }
+
+    .letter-content {
+      background: rgba(255,240,245,0.08);
+      padding: clamp(0.8rem, 2.5vw, 1.5rem);
+      border-radius: 24px;
+      max-width: 100%;
+      border: 1px solid rgba(255,200,200,0.08);
+      backdrop-filter: blur(4px);
+      margin: 0.4rem 0;
+      text-align: left;
+      line-height: 1.8;
+      width: 100%;
+    }
+    .letter-content p {
+      color: #fff0e8;
+      font-size: clamp(0.9rem, 2.4vw, 1.15rem);
+      margin-bottom: 0.5rem;
+      word-wrap: break-word;
+      line-height: 1.6;
+      min-height: 1.5rem;
+    }
+
+    .proposal-title {
+      font-size: clamp(1.3rem, 4.5vw, 1.9rem);
+      font-weight: 700;
+      color: #fff8f0;
+      text-shadow: 0 4px 14px rgba(180, 20, 80, 0.6);
+      word-wrap: break-word;
+      max-width: 100%;
+      min-height: 2.2rem;
+    }
+    .proposal-question {
+      font-size: clamp(1.4rem, 5vw, 2.2rem);
+      font-weight: 600;
+      color: #fff1f0;
+      text-shadow: 0 4px 20px rgba(200, 40, 80, 0.7);
+      margin: 0.3rem 0;
+      word-wrap: break-word;
+      max-width: 100%;
+      line-height: 1.3;
+      min-height: 2.5rem;
+    }
+    .proposal-name {
+      font-size: clamp(1.2rem, 3.8vw, 1.7rem);
+      font-weight: 500;
+      color: #ffe8e0;
+      text-shadow: 0 2px 12px #b33a6b;
+      word-wrap: break-word;
+      min-height: 2rem;
+    }
+    .proposal-message {
+      font-size: clamp(0.95rem, 2.8vw, 1.25rem);
+      font-weight: 400;
+      color: #ffd9d0;
+      background: rgba(255, 80, 120, 0.12);
+      padding: 0.3rem 1rem;
+      border-radius: 60px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 200, 200, 0.12);
+      margin: 0.3rem 0 0.8rem;
+      display: inline-block;
+      word-wrap: break-word;
+      max-width: 100%;
+      min-height: 2rem;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem 1rem;
+      position: relative;
+      min-height: 65px;
+      width: 100%;
+      padding: 0.2rem 0;
+    }
+
+    .btn {
+      border: none;
+      padding: 0.6rem clamp(1rem, 3.5vw, 1.8rem);
+      border-radius: 80px;
+      font-size: clamp(0.9rem, 2.8vw, 1.25rem);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      min-width: 80px;
+      touch-action: manipulation;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      z-index: 5;
+      position: relative;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s, opacity 0.6s ease;
+      word-wrap: break-word;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .btn-yes {
+      background: linear-gradient(145deg, #ff4d7a, #c2185b);
+      color: white;
+      box-shadow: 0 8px 24px rgba(200, 30, 80, 0.5);
+    }
+    .btn-yes:hover { transform: scale(1.04); }
+    .btn-yes:active { transform: scale(0.96); }
+    .btn-no {
+      background: rgba(30, 30, 40, 0.7);
+      backdrop-filter: blur(8px);
+      color: #f0e6e6;
+      border: 1px solid rgba(255, 200, 200, 0.12);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      will-change: transform, left, top;
+      touch-action: none;
+      z-index: 20;
+    }
+    .btn-no:active { background: rgba(60, 40, 50, 0.8); }
+
+    .funny-msg {
+      font-size: clamp(0.75rem, 2.2vw, 0.95rem);
+      font-weight: 500;
+      color: #ffe3d0;
+      background: rgba(180, 40, 80, 0.15);
+      padding: 0.3rem 0.8rem;
+      border-radius: 40px;
+      backdrop-filter: blur(2px);
+      min-height: 2.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 180, 180, 0.1);
+      width: 100%;
+      max-width: 260px;
+      word-wrap: break-word;
+      text-align: center;
+      margin-top: 0.2rem;
+    }
+
+    .celebration-page {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: linear-gradient(145deg, #ffb6c1 0%, #d87093 35%, #ba2d7a 70%, #6a1b4d 100%);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      overflow: hidden;
+    }
+    .celebration-page.active {
+      display: flex;
+      opacity: 1;
+    }
+    .celebration-page .giant-heart {
+      font-size: clamp(3.5rem, 18vw, 7rem);
+      animation: pulseGlow 1.2s infinite alternate ease-in-out;
+      filter: drop-shadow(0 0 40px #ff2a6d);
+      margin-bottom: 0.3rem;
+      opacity: 0;
+      animation: pulseGlow 1.2s infinite alternate ease-in-out, fadeInScale 0.8s ease forwards;
+    }
+    @keyframes fadeInScale {
+      0% { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulseGlow {
+      0% { transform: scale(1); filter: drop-shadow(0 0 30px #ff3b7a); }
+      100% { transform: scale(1.1); filter: drop-shadow(0 0 70px #ff6b9d) drop-shadow(0 0 120px #ff2a6d); }
+    }
+    .celebration-page .rainbow-text {
+      font-size: clamp(2rem, 9vw, 4rem);
+      font-weight: 800;
+      background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #a29bfe, #fd79a8, #fdcb6e);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rainbowShift 2s linear infinite;
+      text-shadow: 0 0 30px rgba(255, 200, 200, 0.15);
+      word-wrap: break-word;
+      text-align: center;
+      max-width: 100%;
+      line-height: 1.2;
+      min-height: 3rem;
+    }
+    @keyframes rainbowShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .celebration-page .sub-celebrate {
+      font-size: clamp(1.1rem, 4.5vw, 2rem);
+      font-weight: 500;
+      color: #fff0e0;
+      text-shadow: 0 0 30px #d43f6b;
+      text-align: center;
+      word-wrap: break-word;
+      max-width: 100%;
+      min-height: 2rem;
+    }
+    .celebration-page .final-thanks {
+      font-size: clamp(1.1rem, 4.5vw, 1.9rem);
+      font-weight: 600;
+      color: #fff5ee;
+      text-shadow: 0 0 30px #ff4d7a;
+      margin-top: 0.3rem;
+      background: rgba(0,0,0,0.12);
+      padding: 0.4rem 1rem;
+      border-radius: 60px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      word-wrap: break-word;
+      max-width: 100%;
+      min-height: 2.5rem;
+    }
+
+    .final-page {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: linear-gradient(145deg, #ffb6c1 0%, #d87093 35%, #ba2d7a 70%, #6a1b4d 100%);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      overflow: hidden;
+    }
+    .final-page.active {
+      display: flex;
+      opacity: 1;
+    }
+    .final-page .heading {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      margin-bottom: 0.3rem;
+      text-align: center;
+    }
+    .final-page .sub-heading {
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      margin-top: 0.2rem;
+      text-align: center;
+    }
+    .final-page .signature {
+      font-size: clamp(1rem, 3vw, 1.6rem);
+      color: #ffb0c0;
+      font-style: italic;
+      margin-top: 0.6rem;
+      animation: fadeInUp 1.5s ease;
+      text-align: center;
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .float-hearts-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1000;
+      overflow: hidden;
+    }
+    .float-heart {
+      position: absolute;
+      bottom: -20px;
+      font-size: clamp(1.4rem, 5vw, 2.5rem);
+      color: #ff4d7a;
+      opacity: 0.7;
+      animation: riseHeart 5s linear infinite;
+      text-shadow: 0 0 20px #ff2a6d;
+    }
+    @keyframes riseHeart {
+      0% { transform: translateY(0) scale(0.6) rotate(0deg); opacity: 0.2; }
+      100% { transform: translateY(-120vh) scale(1.3) rotate(720deg); opacity: 0.9; }
+    }
+
+    .sparkle {
+      position: fixed;
+      width: clamp(6px, 1.8vw, 14px);
+      height: clamp(6px, 1.8vw, 14px);
+      background: radial-gradient(circle, #ffe066, #ffb347);
+      border-radius: 50%;
+      filter: blur(1px);
+      box-shadow: 0 0 30px #ffb84d;
+      animation: sparkleFade 1.2s ease-out forwards;
+      pointer-events: none;
+      z-index: 1001;
+    }
+    @keyframes sparkleFade {
+      0% { transform: scale(0.2) translate(0,0); opacity: 1; }
+      100% { transform: scale(1.6) translate(var(--tx), var(--ty)); opacity: 0; }
+    }
+
+    .typewriter-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: #ffb0c0;
+      margin-left: 2px;
+      animation: blink 0.8s step-end infinite;
+      vertical-align: text-bottom;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .btn-end {
+      border: none;
+      padding: 0.8rem clamp(2rem, 6vw, 3.5rem);
+      border-radius: 80px;
+      font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(145deg, #ff4d7a, #c2185b);
+      color: white;
+      box-shadow: 0 8px 30px rgba(200, 30, 80, 0.6);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s, opacity 0.6s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      letter-spacing: 1px;
+      margin-top: 0.8rem;
+      touch-action: manipulation;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .btn-end.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .btn-end:hover { transform: scale(1.05); }
+    .btn-end:active { transform: scale(0.95); }
+
+    .game-message {
+      font-size: clamp(1.6rem, 6vw, 2.8rem);
+      font-weight: 700;
+      color: #fff5ee;
+      text-shadow: 0 0 40px #ff4d7a, 0 0 80px #ff2a6d;
+      text-align: center;
+      word-wrap: break-word;
+      max-width: 100%;
+      padding: 0.5rem;
+      animation: fadeInScale 0.6s ease forwards;
+    }
+
+    @media (max-width: 420px) {
+      .card { padding: 1rem 0.7rem; border-radius: 32px; }
+      .button-group { gap: 0.5rem; min-height: 55px; }
+      .btn { min-width: 65px; padding: 0.4rem 0.7rem; font-size: 0.85rem; }
+      .funny-msg { font-size: 0.7rem; min-height: 1.8rem; max-width: 220px; }
+      .hearts-grid { gap: 0.5rem; max-width: 240px; }
+      .proposal-question { font-size: 1.2rem; }
+    }
+    @media (max-width: 360px) {
+      .card { padding: 0.8rem 0.5rem; border-radius: 28px; }
+      .btn { min-width: 55px; padding: 0.35rem 0.5rem; font-size: 0.75rem; }
+      .heading { font-size: 1.2rem; }
+      .proposal-question { font-size: 1.1rem; }
+      .step-text { font-size: 1.1rem; }
+      .btn-primary { min-width: 90px; padding: 0.5rem 1rem; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-hearts" id="bgHearts"></div>
+  <div class="card" id="mainCard"></div>
+
+  <div class="celebration-page" id="celebrationPage">
+    <div class="giant-heart">❤️</div>
+    <div class="rainbow-text" id="celebrateText1"></div>
+    <div class="sub-celebrate" id="celebrateText2"></div>
+    <div class="final-thanks" id="celebrateText3"></div>
+    <button class="btn-primary" id="foreverBtn" style="font-size:clamp(1rem,3vw,1.4rem);">👉 Click On Next</button>
+    <div class="float-hearts-container" id="celebrateHearts"></div>
+  </div>
+
+  <div class="final-page" id="finalPage">
+    <div style="font-size:clamp(3rem,15vw,6rem); animation: pulseGlow 1.5s infinite alternate;">❤️</div>
+    <div class="heading" id="finalText1"></div>
+    <div class="sub-heading" id="finalText2"></div>
+    <div class="signature" id="finalText3"></div>
+    <button class="btn-end" id="endBtn">❤️ The End ❤️</button>
+    <div class="float-hearts-container" id="finalHearts"></div>
+  </div>
+
+  <script>
+    (function() {
+      function createBgHearts() {
+        const container = document.getElementById('bgHearts');
+        const symbols = ['♥', '❤', '💕', '💖', '✨'];
+        for (let i = 0; i < 22; i++) {
+          const el = document.createElement('div');
+          el.className = 'bg-heart';
+          el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+          el.style.left = Math.random() * 100 + '%';
+          el.style.fontSize = (1 + Math.random() * 1.6) + 'rem';
+          el.style.animationDuration = (12 + Math.random() * 20) + 's';
+          el.style.animationDelay = (Math.random() * 22) + 's';
+          container.appendChild(el);
+        }
+      }
+      createBgHearts();
+
+      const mainCard = document.getElementById('mainCard');
+      const celebrationPage = document.getElementById('celebrationPage');
+      const finalPage = document.getElementById('finalPage');
+      const celebrateHearts = document.getElementById('celebrateHearts');
+      const finalHearts = document.getElementById('finalHearts');
+
+      function typeWriter(element, text, speed = 45, callback) {
+        if (!element) return;
+        element.textContent = '';
+        element.style.opacity = '1';
+        let index = 0;
+        const cursor = document.createElement('span');
+        cursor.className = 'typewriter-cursor';
+        element.appendChild(cursor);
+
+        function type() {
+          if (index < text.length) {
+            const char = text.charAt(index);
+            cursor.before(char);
+            index++;
+            setTimeout(type, speed);
+          } else {
+            if (cursor.parentNode) cursor.remove();
+            if (callback) callback();
+          }
+        }
+        type();
+      }
+
+      function typeMultiple(elements, texts, speed = 45, callback) {
+        let index = 0;
+        function typeNext() {
+          if (index < elements.length) {
+            const el = elements[index];
+            const txt = texts[index] || '';
+            typeWriter(el, txt, speed, () => {
+              index++;
+              setTimeout(typeNext, 300);
+            });
+          } else {
+            if (callback) callback();
+          }
+        }
+        typeNext();
+      }
+
+      function showButton(btn) {
+        if (btn) btn.classList.add('visible');
+      }
+
+      function renderScreen(html) {
+        mainCard.innerHTML = html;
+        mainCard.className = 'card';
+        mainCard.style.display = 'flex';
+        mainCard.style.opacity = '1';
+        mainCard.style.transform = 'scale(1)';
+      }
+
+      // ----- NEW FIRST PAGE: Hey Anchal -----
+      function showFirstPage() {
+        renderScreen(`
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;width:100%;">
+            <div style="font-size:clamp(2.5rem,10vw,4.5rem); animation: pulseGlow 2s infinite alternate;">💖</div>
+            <div class="heading" id="firstText" style="font-size:clamp(2rem,7vw,3rem);"></div>
+            <button class="btn-primary" id="firstBtn" style="font-size:clamp(1.1rem,3.5vw,1.5rem); padding:0.8rem 2.5rem;">💌 Open My Heart</button>
+          </div>
+        `);
+        const btn = document.getElementById('firstBtn');
+        typeWriter(document.getElementById('firstText'), 'Hey Anchal ❤️', 55, () => {
+          showButton(btn);
+        });
+        document.getElementById('firstBtn').addEventListener('click', showWelcome);
+      }
+
+      // ----- SCREEN 1: Welcome (original first screen) -----
+      function showWelcome() {
+        renderScreen(`
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0.3rem;width:100%;">
+            <div style="font-size:clamp(2.2rem,9vw,3.8rem);">💌</div>
+            <div class="heading" id="welcomeText"></div>
+            <div class="sub-heading" id="welcomeSub"></div>
+            <button class="btn-primary" id="openBtn">Open Message</button>
+          </div>
+        `);
+        const btn = document.getElementById('openBtn');
+        typeMultiple(
+          [document.getElementById('welcomeText'), document.getElementById('welcomeSub')],
+          ['Someone has a special message for you ❤️', 'Tap below to open'],
+          40,
+          () => { showButton(btn); }
+        );
+        document.getElementById('openBtn').addEventListener('click', showCompatibility);
+      }
+
+      // ----- SCREEN 2: Compatibility Scanner -----
+      function showCompatibility() {
+        renderScreen(`
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
+            <div class="heading" style="font-size:clamp(1.1rem,4vw,1.7rem);" id="scanText">Checking Heart Compatibility...</div>
+            <div class="loading-bar"><div class="loading-fill" id="loadFill"></div></div>
+            <div class="loading-text" id="loadText">0%</div>
+          </div>
+        `);
+        const scanEl = document.getElementById('scanText');
+        typeWriter(scanEl, 'Checking Heart Compatibility...', 35, () => {
+          let progress = 0;
+          const fill = document.getElementById('loadFill');
+          const text = document.getElementById('loadText');
+          const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 8) + 3;
+            if (progress > 100) progress = 100;
+            fill.style.width = progress + '%';
+            text.textContent = progress + '%';
+            if (progress >= 100) {
+              clearInterval(interval);
+              setTimeout(() => {
+                renderScreen(`
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;width:100%;">
+                    <div style="font-size:clamp(2.2rem,9vw,3.8rem);">💖</div>
+                    <div class="heading match-glow" id="matchText"></div>
+                    <button class="btn-primary" id="matchBtn">Continue ❤️</button>
+                  </div>
+                `);
+                const btn = document.getElementById('matchBtn');
+                typeWriter(document.getElementById('matchText'), 'Perfect Match Detected 💖', 40, () => {
+                  showButton(btn);
+                });
+                document.getElementById('matchBtn').addEventListener('click', showJourney);
+              }, 500);
+            }
+          }, 200);
+        });
+      }
+
+      // ----- SCREEN 3: Love Journey -----
+      const journeySteps = [
+        "Hello Anchal 👋",
+        "I Have Something To Tell You 💌",
+        "You Are Very Special 💖",
+        "I Waited A Long Time For This ❤️",
+        "Last One Question ❓"
+      ];
+      let journeyIndex = 0;
+
+      function showJourney() {
+        journeyIndex = 0;
+        renderJourneyStep();
+      }
+
+      function renderJourneyStep() {
+        const step = journeySteps[journeyIndex];
+        const isLast = journeyIndex === journeySteps.length - 1;
+        renderScreen(`
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;width:100%;min-height:180px;justify-content:center;">
+            <div class="step-text" id="stepText"></div>
+            <button class="btn-primary" id="nextBtn">${isLast ? '💕 Let\'s Go' : 'Next ➜'}</button>
+          </div>
+        `);
+        const btn = document.getElementById('nextBtn');
+        typeWriter(document.getElementById('stepText'), step, 40, () => {
+          showButton(btn);
+        });
+        document.getElementById('nextBtn').addEventListener('click', () => {
+          if (isLast) {
+            showHeartsGame();
+          } else {
+            journeyIndex++;
+            renderJourneyStep();
+          }
+        });
+      }
+
+      // ----- SCREEN 4: Hearts Game -----
+      let heartsFound = 0;
+      const totalHearts = 5;
+
+      function showHeartsGame() {
+        heartsFound = 0;
+        const hearts = ['❤️', '💖', '♥', '💕', '❤️'];
+        let html = `
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
+            <div class="heading" style="font-size:clamp(1.1rem,4vw,1.5rem);" id="gameTitle"></div>
+            <div class="hearts-grid" id="heartsGrid">
+        `;
+        hearts.forEach((h, i) => {
+          html += `<div class="heart-item" data-index="${i}" data-found="false">${h}</div>`;
+        });
+        html += `
+            </div>
+            <div class="sub-heading" id="gameStatus">0 / ${totalHearts} found</div>
+          </div>
+        `;
+        renderScreen(html);
+        const title = document.getElementById('gameTitle');
+        typeWriter(title, 'Find All Hidden Hearts ❤️', 40, () => {
+          const items = document.querySelectorAll('.heart-item');
+          const status = document.getElementById('gameStatus');
+          
+          items.forEach((el, idx) => {
+            el.addEventListener('click', function() {
+              if (this.dataset.found === 'true') return;
+              this.dataset.found = 'true';
+              heartsFound++;
+              status.textContent = `${heartsFound} / ${totalHearts} found`;
+              
+              const rect = this.getBoundingClientRect();
+              const cx = rect.left + rect.width / 2;
+              const cy = rect.top + rect.height / 2;
+              
+              if (heartsFound === totalHearts) {
+                this.classList.add('final-heart');
+                createHeartExplosion(cx, cy);
+                
+                items.forEach((other, i) => {
+                  if (i !== idx && other.dataset.found === 'false') {
+                    other.classList.add('pop');
+                    createParticles(other.getBoundingClientRect());
+                    setTimeout(() => { other.style.display = 'none'; }, 600);
+                  }
+                });
+                
+                setTimeout(() => {
+                  showFinaleMessage();
+                }, 1200);
+              } else {
+                this.classList.add('pop');
+                createParticles(rect);
+                setTimeout(() => { this.style.display = 'none'; }, 600);
+              }
+            });
+          });
+        });
+      }
+
+      function createParticles(rect) {
+        const symbols = ['❤️', '💖', '♥', '💕', '💘', '✨'];
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        for (let i = 0; i < 12; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'heart-particle';
+          particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+          const angle = Math.random() * 2 * Math.PI;
+          const dist = 60 + Math.random() * 120;
+          const tx = Math.cos(angle) * dist;
+          const ty = Math.sin(angle) * dist - 40;
+          particle.style.setProperty('--tx', tx + 'px');
+          particle.style.setProperty('--ty', ty + 'px');
+          particle.style.left = cx + 'px';
+          particle.style.top = cy + 'px';
+          particle.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+          document.body.appendChild(particle);
+          setTimeout(() => particle.remove(), 1300);
+        }
+      }
+
+      function createHeartExplosion(cx, cy) {
+        const symbols = ['❤️', '💖', '♥', '💕', '💘', '💗', '💝', '✨'];
+        for (let i = 0; i < 45; i++) {
+          const heart = document.createElement('div');
+          heart.className = 'explosion-heart';
+          heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+          const angle = Math.random() * 2 * Math.PI;
+          const dist = 80 + Math.random() * 250;
+          const tx = Math.cos(angle) * dist;
+          const ty = Math.sin(angle) * dist - 100;
+          heart.style.setProperty('--tx', tx + 'px');
+          heart.style.setProperty('--ty', ty + 'px');
+          heart.style.left = cx + 'px';
+          heart.style.top = cy + 'px';
+          heart.style.fontSize = (1.2 + Math.random() * 2) + 'rem';
+          heart.style.animationDuration = (1.5 + Math.random() * 1) + 's';
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), 2500);
+        }
+        for (let i = 0; i < 30; i++) {
+          setTimeout(() => {
+            const spark = document.createElement('div');
+            spark.className = 'sparkle';
+            const x = cx + (Math.random() - 0.5) * 300;
+            const y = cy + (Math.random() - 0.5) * 300;
+            spark.style.left = x + 'px';
+            spark.style.top = y + 'px';
+            const tx = (Math.random() - 0.5) * 400;
+            const ty = (Math.random() - 0.5) * 400;
+            spark.style.setProperty('--tx', tx + 'px');
+            spark.style.setProperty('--ty', ty + 'px');
+            spark.style.width = (8 + Math.random() * 20) + 'px';
+            spark.style.height = spark.style.width;
+            document.body.appendChild(spark);
+            setTimeout(() => spark.remove(), 1500);
+          }, i * 50);
+        }
+      }
+
+      function showFinaleMessage() {
+        renderScreen(`
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:200px;gap:0.8rem;">
+            <div class="game-message" id="loveText" style="opacity:0;"></div>
+            <div class="game-message" id="thanksText" style="opacity:0;font-size:clamp(1.2rem,4vw,1.8rem);"></div>
+            <button class="btn-primary" id="finalGameBtn" style="margin-top:0.5rem;">Click On Next 👉</button>
+          </div>
+        `);
+        
+        for (let i = 0; i < 20; i++) {
+          setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'float-heart';
+            heart.textContent = ['❤️', '💖', '♥', '💕', '💘'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.fontSize = (1.2 + Math.random() * 2) + 'rem';
+            heart.style.animationDuration = (4 + Math.random() * 5) + 's';
+            heart.style.animationDelay = (Math.random() * 0.5) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 8000);
+          }, i * 100);
+        }
+        
+        const loveEl = document.getElementById('loveText');
+        const thanksEl = document.getElementById('thanksText');
+        const btn = document.getElementById('finalGameBtn');
+        
+        typeWriter(loveEl, 'I Love You ❤️', 50, () => {
+          setTimeout(() => {
+            typeWriter(thanksEl, 'Thank You For Being In My Life ❤️', 45, () => {
+              setTimeout(() => {
+                showButton(btn);
+              }, 400);
+            });
+          }, 400);
+        });
+        
+        document.getElementById('finalGameBtn').addEventListener('click', showLoveLetter);
+      }
+
+      // ----- SCREEN 5: Love Letter -----
+      function showLoveLetter() {
+        renderScreen(`
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%;gap:0.5rem;">
+            <div class="heading" style="font-size:clamp(1.1rem,4vw,1.6rem);" id="letterTitle"></div>
+            <button class="btn-primary" id="openLetterBtn">Read My Heart ❤️</button>
+            <div id="letterReveal" style="display:none;width:100%;">
+              <div class="letter-content" id="letterContent">
+                <p id="letterP1"></p>
+                <p id="letterP2"></p>
+                <p id="letterP3"></p>
+                <p id="letterP4" style="font-size:clamp(1rem,3vw,1.3rem); color:#ffb0c0; font-weight:600;"></p>
+              </div>
+              <button class="btn-primary" id="proposalBtn" style="margin-top:0.3rem;">💖 Answer Me 💖</button>
+            </div>
+          </div>
+        `);
+        const btn = document.getElementById('openLetterBtn');
+        typeWriter(document.getElementById('letterTitle'), '💌 My Heart For You', 40, () => {
+          showButton(btn);
+        });
+        document.getElementById('openLetterBtn').addEventListener('click', function() {
+          this.style.display = 'none';
+          document.getElementById('letterReveal').style.display = 'block';
+          const p1 = document.getElementById('letterP1');
+          const p2 = document.getElementById('letterP2');
+          const p3 = document.getElementById('letterP3');
+          const p4 = document.getElementById('letterP4');
+          const lines = [
+            'Maybe I am not perfect, but my feelings are real.',
+            'Every smile of yours means a lot to me.',
+            'Today I only want to ask one thing...',
+            'Will You Forever Be Mine? ❤️'
+          ];
+          typeMultiple([p1, p2, p3, p4], lines, 30, () => {
+            const proposalBtn = document.getElementById('proposalBtn');
+            showButton(proposalBtn);
+          });
+          document.getElementById('proposalBtn').addEventListener('click', showProposal);
+        });
+      }
+
+      // ----- SCREEN 6: Proposal -----
+      let noClickCount = 0;
+      let noBtn, yesBtn, funnyMsg, buttonGroup;
+
+      function showProposal() {
+        renderScreen(`
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
+            <div class="proposal-title" id="propTitle"></div>
+            <div class="proposal-question" id="propQuestion"></div>
+            <div class="proposal-name" id="propName"></div>
+            <div class="proposal-message" id="propMessage"></div>
+            <div class="button-group" id="buttonGroup">
+              <button class="btn btn-yes" id="yesBtn">YES ❤️</button>
+              <button class="btn btn-no" id="noBtn">NO 🖤</button>
+            </div>
+            <div class="funny-msg" id="funnyMsg">💕 Forever together 💕</div>
+          </div>
+        `);
+
+        const titleEl = document.getElementById('propTitle');
+        const questionEl = document.getElementById('propQuestion');
+        const nameEl = document.getElementById('propName');
+        const msgEl = document.getElementById('propMessage');
+        const yesButton = document.getElementById('yesBtn');
+        const noButton = document.getElementById('noBtn');
+
+        typeMultiple(
+          [titleEl, questionEl, nameEl, msgEl],
+          ['Final Proposal Experience ❤️', 'Will You Forever Be Mine? ❤️', 'Anchal 💖', 'I Love You So Much ❤️'],
+          35,
+          () => {
+            showButton(yesButton);
+            showButton(noButton);
+          }
+        );
+
+        noBtn = document.getElementById('noBtn');
+        yesBtn = document.getElementById('yesBtn');
+        funnyMsg = document.getElementById('funnyMsg');
+        buttonGroup = document.getElementById('buttonGroup');
+        noClickCount = 0;
+
+        noBtn.style.position = 'relative';
+        noBtn.style.left = 'auto';
+        noBtn.style.top = 'auto';
+        buttonGroup.style.position = 'relative';
+
+        const noMessages = [
+          'Are you sure? 🥺',
+          'Think again ❤️',
+          'Itna bhi kya sochna 😭',
+          'Dil tod dogi kya 💔',
+          'Please say YES 🙏',
+          'System says YES is better 😅'
+        ];
+
+        function getNoButtonSize() {
+          return { width: noBtn.offsetWidth || 80, height: noBtn.offsetHeight || 45 };
+        }
+
+        function getRandomPositionInContainer() {
+          const containerRect = buttonGroup.getBoundingClientRect();
+          const btnSize = getNoButtonSize();
+          const padding = 4;
+          const maxX = containerRect.width - btnSize.width - padding;
+          const maxY = containerRect.height - btnSize.height - padding;
+          const minX = padding;
+          const minY = padding;
+          if (maxX < 0 || maxY < 0) return { x: 4, y: 4 };
+          let x = Math.random() * (maxX - minX) + minX;
+          let y = Math.random() * (maxY - minY) + minY;
+          const yesRect = yesBtn.getBoundingClientRect();
+          const groupRect = buttonGroup.getBoundingClientRect();
+          const yesRelX = yesRect.left - groupRect.left;
+          const yesRelY = yesRect.top - groupRect.top;
+          const yesW = yesRect.width;
+          const yesH = yesRect.height;
+          for (let attempt = 0; attempt < 20; attempt++) {
+            const overlapX = x < yesRelX + yesW + 6 && x + btnSize.width > yesRelX - 6;
+            const overlapY = y < yesRelY + yesH + 6 && y + btnSize.height > yesRelY - 6;
+            if (!overlapX && !overlapY) break;
+            x = Math.random() * (maxX - minX) + minX;
+            y = Math.random() * (maxY - minY) + minY;
+          }
+          x = Math.min(maxX, Math.max(minX, x));
+          y = Math.min(maxY, Math.max(minY, y));
+          return { x, y };
+        }
+
+        function moveNoButton(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          noClickCount++;
+          const speed = Math.max(0.02, 0.18 - noClickCount * 0.012);
+          noBtn.style.transition = `left ${speed}s cubic-bezier(0.34, 1.56, 0.64, 1), top ${speed}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
+          const pos = getRandomPositionInContainer();
+          noBtn.style.position = 'absolute';
+          noBtn.style.left = pos.x + 'px';
+          noBtn.style.top = pos.y + 'px';
+          buttonGroup.style.position = 'relative';
+
+          const msg = noMessages[Math.floor(Math.random() * noMessages.length)];
+          funnyMsg.textContent = msg;
+
+          const currentScale = parseFloat(yesBtn.dataset.scale) || 1;
+          const newScale = Math.min(1.45, currentScale + 0.04);
+          yesBtn.dataset.scale = newScale;
+          yesBtn.style.transform = `scale(${newScale})`;
+          yesBtn.style.boxShadow = `0 8px 30px rgba(200, 30, 80, ${0.4 + newScale * 0.2})`;
+        }
+
+        noBtn.addEventListener('click', moveNoButton);
+        noBtn.addEventListener('touchstart', moveNoButton, { passive: false });
+
+        yesBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          triggerCelebration();
+        });
+
+        function repositionNo() {
+          if (mainCard.classList.contains('hidden')) return;
+          if (noBtn && noBtn.style.position === 'absolute') {
+            const pos = getRandomPositionInContainer();
+            noBtn.style.left = pos.x + 'px';
+            noBtn.style.top = pos.y + 'px';
+          }
+        }
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(repositionNo, 150);
+        });
+        setInterval(() => {
+          if (!mainCard.classList.contains('hidden') && noBtn && noBtn.style.position === 'absolute') {
+            const containerRect = buttonGroup.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            const threshold = 3;
+            if (btnRect.left < containerRect.left - threshold || 
+                btnRect.right > containerRect.right + threshold ||
+                btnRect.top < containerRect.top - threshold ||
+                btnRect.bottom > containerRect.bottom + threshold) {
+              const pos = getRandomPositionInContainer();
+              noBtn.style.left = pos.x + 'px';
+              noBtn.style.top = pos.y + 'px';
+            }
+          }
+        }, 1200);
+      }
+
+      // ----- CELEBRATION -----
+      function triggerCelebration() {
+        mainCard.classList.add('hidden');
+        mainCard.style.display = 'none';
+        
+        celebrationPage.classList.add('active');
+        
+        const text1 = document.getElementById('celebrateText1');
+        const text2 = document.getElementById('celebrateText2');
+        const text3 = document.getElementById('celebrateText3');
+        const foreverBtn = document.getElementById('foreverBtn');
+        
+        typeWriter(text1, 'I LOVE YOU ❤️', 45, () => {
+          setTimeout(() => {
+            typeWriter(text2, 'You Made My Day 💖', 45, () => {
+              setTimeout(() => {
+                typeWriter(text3, 'Thank You For Choosing Me ❤️', 45, () => {
+                  showButton(foreverBtn);
+                });
+              }, 300);
+            });
+          }, 300);
+        });
+        
+        spawnCelebrateHearts();
+        spawnSparkles();
+        spawnFireworks();
+
+        document.getElementById('foreverBtn').addEventListener('click', function() {
+          celebrationPage.classList.remove('active');
+          celebrationPage.style.display = 'none';
+          finalPage.classList.add('active');
+          
+          const f1 = document.getElementById('finalText1');
+          const f2 = document.getElementById('finalText2');
+          const f3 = document.getElementById('finalText3');
+          const endBtn = document.getElementById('endBtn');
+          
+          typeMultiple(
+            [f1, f2, f3],
+            ['Made With Love ❤️', 'By Abhishek ❤️', 'Forever And Always 💖'],
+            40,
+            () => {
+              showButton(endBtn);
+            }
+          );
+          spawnFinalHearts();
+        });
+      }
+
+      function spawnCelebrateHearts() {
+        const symbols = ['❤️', '💖', '♥', '💕', '❤', '💘'];
+        for (let i = 0; i < 30; i++) {
+          setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'float-heart';
+            heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.fontSize = (1.4 + Math.random() * 2.4) + 'rem';
+            heart.style.animationDuration = (4 + Math.random() * 6) + 's';
+            heart.style.animationDelay = (Math.random() * 0.8) + 's';
+            celebrateHearts.appendChild(heart);
+            setTimeout(() => heart.remove(), 7000);
+          }, i * 80);
+        }
+        if (celebrationPage.classList.contains('active')) {
+          setTimeout(() => spawnCelebrateHearts(), 5000);
+        }
+      }
+
+      function spawnFinalHearts() {
+        const symbols = ['❤️', '💖', '♥', '💕', '💘'];
+        for (let i = 0; i < 30; i++) {
+          setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'float-heart';
+            heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.fontSize = (1.2 + Math.random() * 2.2) + 'rem';
+            heart.style.animationDuration = (5 + Math.random() * 7) + 's';
+            heart.style.animationDelay = (Math.random() * 0.8) + 's';
+            finalHearts.appendChild(heart);
+            setTimeout(() => heart.remove(), 8000);
+          }, i * 100);
+        }
+        setTimeout(() => spawnFinalHearts(), 6000);
+      }
+
+      function spawnSparkles() {
+        for (let i = 0; i < 70; i++) {
+          setTimeout(() => {
+            const spark = document.createElement('div');
+            spark.className = 'sparkle';
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            spark.style.left = x + 'px';
+            spark.style.top = y + 'px';
+            const tx = (Math.random() - 0.5) * 500;
+            const ty = (Math.random() - 0.5) * 500;
+            spark.style.setProperty('--tx', tx + 'px');
+            spark.style.setProperty('--ty', ty + 'px');
+            spark.style.width = (6 + Math.random() * 18) + 'px';
+            spark.style.height = spark.style.width;
+            spark.style.background = `radial-gradient(circle, ${['#ffe066','#ffb347','#ff6b9d','#a29bfe','#fd79a8','#fdcb6e'][Math.floor(Math.random()*6)]}, #ffd93d)`;
+            document.body.appendChild(spark);
+            setTimeout(() => spark.remove(), 1500);
+          }, i * 25);
+        }
+      }
+
+      function spawnFireworks() {
+        for (let i = 0; i < 25; i++) {
+          setTimeout(() => {
+            const spark = document.createElement('div');
+            spark.className = 'sparkle';
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight * 0.7;
+            spark.style.left = x + 'px';
+            spark.style.top = y + 'px';
+            const tx = (Math.random() - 0.5) * 600;
+            const ty = (Math.random() - 0.5) * 600 - 200;
+            spark.style.setProperty('--tx', tx + 'px');
+            spark.style.setProperty('--ty', ty + 'px');
+            spark.style.width = (8 + Math.random() * 16) + 'px';
+            spark.style.height = spark.style.width;
+            spark.style.background = `radial-gradient(circle, ${['#ff6b6b','#feca57','#48dbfb','#a29bfe','#fd79a8','#fdcb6e','#ff4d7a'][Math.floor(Math.random()*7)]}, #fff)`;
+            spark.style.boxShadow = '0 0 40px #ffb84d';
+            document.body.appendChild(spark);
+            setTimeout(() => spark.remove(), 1500);
+          }, i * 80);
+        }
+      }
+
+      // ----- START: New First Page -----
+      showFirstPage();
+    })();
+  </script>
+</body>
+</html>
